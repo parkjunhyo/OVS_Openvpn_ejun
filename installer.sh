@@ -135,7 +135,7 @@ then
 fi
 
 ### server key creation
-key_path=/etc/openvpn/easy-rsa/keys
+key_path="/etc/openvpn/easy-rsa/keys"
 if [[ ! -d $key_path ]]
 then
  vars_file="/etc/openvpn/easy-rsa/vars"
@@ -181,4 +181,11 @@ then
  cd $working_directory/pure_ftpd_j
  ./setup.sh
  cd $working_directory
+fi
+
+### Copy the restart command to /usr/bin/
+restart_file="/usr/bin/restart_OVS_Openvpn.sh"
+if [[ ! -f $restart_file ]]
+then
+ cp $working_directory/restart_OVS_Openvpn.sh $restart_file
 fi
