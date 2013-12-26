@@ -116,7 +116,7 @@ then
  touch $vpn_start_sh
  chmod 777 $vpn_start_sh
  echo "#! /usr/bin/env bash" > $vpn_start_sh
- echo "ovs-vsctl add-port $ovsbr_int $tap_name -- set Interface $tap_name type=internal" >> $vpn_start_sh
+ echo "ovs-vsctl add-port $ovsbr_int $tap_name" >> $vpn_start_sh
  echo "ip link set $tap_name up promisc on" >> $vpn_start_sh
 fi
 
