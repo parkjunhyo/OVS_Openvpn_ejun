@@ -5,6 +5,7 @@ working_directory=`pwd`
 source $working_directory/ovsopenvpn.cfg
 
 ### basic package for installation
+apt-get update
 apt-get install -y git expect
 
 ### network default configuration
@@ -19,3 +20,11 @@ then
 fi
 
 ### install openvpn package
+if [[ ! `which ovs-vsctl` ]]
+then
+ git clone https://github.com/parkjunhyo/ovs_j.git
+ cd $working_directory/ovs_j
+ ./soft_kernel_setup.sh 
+ cd $working_directory
+fi
+
