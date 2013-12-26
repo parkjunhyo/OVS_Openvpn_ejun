@@ -158,6 +158,7 @@ then
  cp /etc/openvpn/easy-rsa/keys/dh1024.pem /etc/openvpn
  ### restart the openvpn
  /etc/init.d/openvpn restart
+ cd $working_directory
 fi
 
 ### User Account Added for OVS_OpenVPN
