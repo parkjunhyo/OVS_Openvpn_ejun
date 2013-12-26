@@ -155,4 +155,5 @@ then
  ### copy the server key
  cp /etc/openvpn/easy-rsa/keys/server.* /etc/openvpn
  cp /etc/openvpn/easy-rsa/keys/ca.* /etc/openvpn 
+ cp /etc/openvpn/easy-rsa/keys/dh1024.pem /etc/openvpn
 fi
