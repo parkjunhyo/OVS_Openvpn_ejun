@@ -1,0 +1,21 @@
+#! /usr/bin/expect
+
+spawn bash -c "./build-ca"
+expect -re "Country Name"
+send "\r"
+expect -re "State or Province Name"
+send "\r"
+expect -re "Locality Name"
+send "\r"
+expect -re "Organization Name"
+send "\r"
+expect -re "Organizational Unit Name"
+send "\r"
+expect -re "Common Name"
+send "\r"
+expect -re "Name"
+send "\r"
+expect -re "Email Address"
+send "\r"
+interact
+

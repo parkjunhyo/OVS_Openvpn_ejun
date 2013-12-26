@@ -134,4 +134,25 @@ then
  echo "server-bridge $priv_start $priv_subnet $priv_range_start $priv_range_end" >> $server_conf
 fi
 
-
+### server key creation
+key_path="/etc/openvpn/easy-rsa/keys"
+if [[ ! -f $key_path ]]
+then
+ vars_file="/etc/openvpn/easy-rsa/vars"
+ cp /etc/openvpn/easy-rsa/vars.template /etc/openvpn/easy-rsa/vars
+ cp $working_directory/build_ca.exp /etc/openvpn/easy-rsa/build_ca.exp 
+ cp $working_directory/build_key_server.exp /etc/openvpn/easy-rsa/build_key_server.exp
+ echo "export KEY_CN=server" >> $vars_file
+ echo "export KEY_NAME=server" >> $vars_file
+ echo "export KEY_OU=server" >> $vars_file
+ echo "export PKCS11_MODULE_PATH=server" >> $vars_file
+ cd /etc/openvpn/easy-rsa/
+ source $vars_file
+ ./clean-all
+ ./build-dh
+ ./build_ca.exp
+ ./build_key_server.exp
+ ### copy the server key
+ cp /etc/openvpn/easy-rsa/keys/server.* /etc/openvpn
+ cp /etc/openvpn/easy-rsa/keys/ca.* /etc/openvpn 
+fi
