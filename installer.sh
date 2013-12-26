@@ -122,7 +122,7 @@ fi
 
 ### VPN Server Configuration 
 vpnport=${vpnport:='1194'}
-prototype=${prototype:='tcp'}
+prototype=${prototype:='udp'}
 server_conf="/etc/openvpn/server.conf"
 if [[ ! -f $server_conf ]]
 then
@@ -139,7 +139,7 @@ key_path="/etc/openvpn/easy-rsa/keys"
 if [[ ! -f $key_path ]]
 then
  vars_file="/etc/openvpn/easy-rsa/vars"
- cp /etc/openvpn/easy-rsa/vars.template /etc/openvpn/easy-rsa/vars
+ cp /etc/openvpn/easy-rsa/vars.template $vars_file
  cp $working_directory/build_ca.exp /etc/openvpn/easy-rsa/build_ca.exp 
  cp $working_directory/build_key_server.exp /etc/openvpn/easy-rsa/build_key_server.exp
  echo "export KEY_CN=server" >> $vars_file
