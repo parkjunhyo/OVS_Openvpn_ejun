@@ -120,3 +120,18 @@ then
  echo "ip link set $tap_name up promisc on" >> $vpn_start_sh
 fi
 
+### VPN Server Configuration 
+vpnport=${vpnport:='1194'}
+prototype=${prototype:='tcp'}
+server_conf="/etc/openvpn/server.conf"
+if [[ ! -f $server_conf ]]
+then
+ cp $working_directory/server.conf $server_conf
+ echo "local `echo $system_external_network | awk -F'[/]' '{print $1}'`" >> $server_conf
+ echo "port $vpnport" >> $server_conf
+ echo "proto $prototype" >> $server_conf
+ echo "dev $tap_name" >> $server_conf
+ echo "server-bridge $priv_start $priv_subnet $priv_range_start $priv_range_end" >> $server_conf
+fi
+
+
