@@ -6,7 +6,7 @@ source $working_directory/ovsopenvpn.cfg
 
 ### basic package for installation
 apt-get update
-apt-get install -y git expect openvpn ipcalc
+apt-get install -y git expect openvpn ipcalc zip
 
 ### network default configuration
 if [ ! -d $working_directory/system_netcfg_exchange ]
@@ -135,8 +135,8 @@ then
 fi
 
 ### server key creation
-key_path="/etc/openvpn/easy-rsa/keys"
-if [[ ! -f $key_path ]]
+key_path=/etc/openvpn/easy-rsa/keys
+if [[ ! -d $key_path ]]
 then
  vars_file="/etc/openvpn/easy-rsa/vars"
  cp /etc/openvpn/easy-rsa/vars.template $vars_file
@@ -156,4 +156,29 @@ then
  cp /etc/openvpn/easy-rsa/keys/server.* /etc/openvpn
  cp /etc/openvpn/easy-rsa/keys/ca.* /etc/openvpn 
  cp /etc/openvpn/easy-rsa/keys/dh1024.pem /etc/openvpn
+ ### restart the openvpn
+ /etc/init.d/openvpn restart
+fi
+
+### User Account Added for OVS_OpenVPN
+new_user=${new_user:='vpnuser'}
+new_pass=${new_pass:='vpnuser'}
+sed -i 's/change_user/'$new_user'/' $working_directory/add_new_user.exp
+sed -i 's/change_pass/'$new_pass'/' $working_directory/add_new_user.exp
+if [[ ! `cat /etc/passwd | grep -i "^$new_user"` ]]
+then
+ /usr/sbin/useradd $new_user
+ $working_directory/add_new_user.exp
+ mkdir -p /home/$new_user
+ chown $new_user.$new_user /home/$new_user
+ chmod 777 /home/$new_user
+fi
+
+### Pure-FTP Activation and Installation
+if [ ! -d $working_directory/pure_ftpd_j ]
+then
+ git clone https://github.com/parkjunhyo/pure_ftpd_j.git
+ cd $working_directory/pure_ftpd_j
+ ./setup.sh
+ cd $working_directory
 fi

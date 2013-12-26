@@ -1,0 +1,16 @@
+#! /usr/bin/expect
+
+## password information
+## you can change the password what you want
+set newuser vpnuser
+set newpass vpnuser
+
+
+## auto password setup
+spawn bash -c "passwd $newuser"
+expect -re "Enter new UNIX password:"
+send "$newpass\r"
+expect -re "Retype new UNIX password:"
+send "$newpass\r"
+interact
+
