@@ -27,7 +27,7 @@ fi
 
 ### check the key file existance
 key_file_zip="/home/$new_user/$key_name.zip"
-if [[ ! -f $key_file_zip ]]
+if [[ -f $key_file_zip ]]
 then
  echo "$0 $key_name is used, $0 [ other key name ]"
  exit
@@ -46,18 +46,25 @@ source $vars_file
 cd $working_directory
 
 ### Client Key Creation Processing
-network_interface_cfg="/etc/network/interfaces"
+tap_name=${tap_name:='tap0'}
+vpnport=${vpnport:='1194'}
+prototype=${prototype:='udp'}
 route_interface=`route | grep -i 'default' | awk '{print $8}'`
 system_external_network=`ip addr show $route_interface | grep -i 'inet\>' | awk '{print $2}'`
-echo "local `echo $system_external_network | awk -F'[/]' '{print $1}'`" 
- 
-
-
-
 key_path="/etc/openvpn/easy-rsa/keys"
 temp_mem="/tmp/$key_name"
+client_config="$temp_mem/$key_name.ovpn"
+
+### client key temporaty processing and zip abstract
 mkdir -p $temp_mem
+cp $working_directory/client.ovpn.template $client_config
 cp /etc/openvpn/easy-rsa/keys/$key_name.* $temp_mem
 cp /etc/openvpn/easy-rsa/keys/ca.* $temp_mem
-zip -v /home/$new_user/$key_name.zip $temp_mem
+### client.ovpn file updates
+echo "remote `echo $system_external_network | awk -F'[/]' '{print $1}'` $vpnport" >> $client_config
+echo "proto $prototype" >> $client_config
+echo "dev $tap_name" >> $client_config
+echo "cert $key_name.crt" >> $client_config
+echo "key $key_name.key" >> $client_config
+zip -v $key_file_zip $temp_mem
 rm -rf $temp_mem
