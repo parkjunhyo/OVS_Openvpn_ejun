@@ -66,5 +66,5 @@ echo "proto $prototype" >> $client_config
 echo "dev $tap_name" >> $client_config
 echo "cert $key_name.crt" >> $client_config
 echo "key $key_name.key" >> $client_config
-zip -v $key_file_zip $temp_mem
+zip -v $key_file_zip $temp_mem/*
 rm -rf $temp_mem
