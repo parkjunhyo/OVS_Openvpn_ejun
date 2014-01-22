@@ -190,3 +190,22 @@ if [[ ! -f $restart_file ]]
 then
  cp $working_directory/restart_OVS_Openvpn.sh $restart_file
 fi
+
+### extend the internal network
+extend_ethernet=${extend_ethernet:=None}
+if [[ $extend_ethernet != None ]]
+then
+ if [[ ! `cat $network_interface_cfg | grep -i "iface $extend_ethernet"` ]]
+ then
+  cp $network_interface_cfg $network_interface_cfg.$(date +%Y%H%M%S)
+  echo "" >> $network_interface_cfg
+  echo "auto $extend_ethernet" >> $network_interface_cfg
+  echo "iface $extend_ethernet inet manual" >> $network_interface_cfg
+  echo " up ip link set \$IFACE up promisc on" >> $network_interface_cfg
+  echo "" >> $network_interface_cfg
+  ### network restart
+  /etc/init.d/networking restart
+ fi
+ ### attatch the interface
+ ovs-vsctl add-port $ovsbr_int $extend_ethernet
+fi
