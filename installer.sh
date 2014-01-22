@@ -205,7 +205,7 @@ then
   echo "" >> $network_interface_cfg
   ### network restart
   /etc/init.d/networking restart
+  ### attatch the interface
+  ovs-vsctl add-port $ovsbr_int $extend_ethernet
  fi
- ### attatch the interface
- ovs-vsctl add-port $ovsbr_int $extend_ethernet
 fi
