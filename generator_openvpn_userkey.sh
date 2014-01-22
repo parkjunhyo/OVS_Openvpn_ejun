@@ -8,6 +8,7 @@ source $working_directory/ovsopenvpn.cfg
 if [[ $# != 1 ]]
 then
  echo "$0 [ key name ]"
+ exit
 fi
 key_name=$1
 
