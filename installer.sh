@@ -90,6 +90,19 @@ then
  /etc/init.d/networking restart
 fi
 
+### iptable SANT rule definition
+snat_rule="/etc/openvpn_iptables.rule"
+snat_rule_regular="\/etc\/openvpn_iptables.rule"
+if [[ ! -f $snat_rule ]]
+then
+ snat_interface=`route | grep -i 'default' | awk '{print $8}'`
+ snat_address=`echo $system_external_network | awk -F'[/]' '{print $1}'`
+ iptables -t nat -A POSTROUTING -s $internal_network -o $snat_interface -j SNAT --to-source $snat_address
+ iptables-save > $snat_rule
+ ### update the network configuration
+ sed -i 's/iface '$ovsbr_ext' inet static/iface '$ovsbr_ext' inet static\n        pre-up iptables-restore < '$snat_rule_regular'/' $network_interface_cfg
+fi
+
 ### Open VPN Configuration re-make and change to use
 if [[ ! -d /etc/openvpn/easy-rsa ]]
 then
